@@ -84,7 +84,8 @@ trait Streaming extends LowPriorityStreaming {
     *
     * @tparam OutputType The type of output that is to be interpreted as an `Output`,
     *         such as [[java.io.OutputStream]] or [[java.io.Writer]]
-    * @tparam Data The type of data that the [[Output]] carries */
+    * @tparam Data The type of data that the Output[@specialized(Byte, Char) Data] carries
+    */
   trait OutputBuilder[OutputType, Data] {
     def output(s: OutputType)(implicit eh: ExceptionHandler): eh.![Exception, Output[Data]]
   }
@@ -189,7 +190,7 @@ trait Streaming extends LowPriorityStreaming {
 
   /** Type trait for defining how a URL of type U should 
     *
-    * @tparam Url Url for which this corresponds
+    * @ tparam Url Url for which this corresponds
     * @tparam Data Units of data to be streamed, typically `Byte` or `Char` */
   @implicitNotFound(msg = "Cannot write ${Data} data to ${UrlType} resources.")
   trait StreamWriter[-UrlType, @specialized(Byte, Char) Data] {

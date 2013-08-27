@@ -100,7 +100,7 @@ trait Net extends Linking with JsonProcessing with MimeTyping with Services { th
     
     private[rapture] def javaConnection: HttpURLConnection =
       new URL(toString).openConnection().asInstanceOf[HttpURLConnection]
-    
+
     private val trustAllCertificates = {
       Array[TrustManager](new X509TrustManager {
         override def getAcceptedIssuers(): Array[java.security.cert.X509Certificate] = null

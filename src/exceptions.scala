@@ -19,8 +19,7 @@ implied. See the License for the specific language governing permissions and lim
 License.
 ***************************************************************************************************/
 
-package rapture.implementation
-import rapture._
+package rapture
 
 import language.higherKinds
 

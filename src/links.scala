@@ -18,9 +18,7 @@ distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, e
 implied. See the License for the specific language governing permissions and limitations under the
 License.
 ***************************************************************************************************/
-
-package rapture.implementation
-import rapture._
+package rapture
 
 import scala.collection.mutable.WrappedArray
 
@@ -160,7 +158,7 @@ trait Linking extends Misc {
     override def toString() =
       (if(ascent == 0 && elements.isEmpty) "."
       else if(ascent == 0 && elements.head == "" && elements.length == 1) "/"
-      else (Array.fill(ascent)("..") ++ elements).mkString("/"))+afterPathString
+      else (Array.fill(ascent)("src/main") ++ elements).mkString("/"))+afterPathString
 
     override def equals(that: Any) = that match {
       case p: Path[_] =>

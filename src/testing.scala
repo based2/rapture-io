@@ -21,7 +21,6 @@ License.
 
 package rapture.implementation
 import rapture._
-
 import scala.collection.mutable.ListBuffer
 
 trait Testing extends CommandLineExtras {

@@ -2,7 +2,7 @@
 Rapture I/O
 ===========
 
-Version 0.8.0 (beta) for Scala 2.10.1
+Version 0.8.0 (beta) for Scala 2.10.2
 
 Rapture is a general purpose I/O library for Scala.
 
@@ -17,7 +17,7 @@ to get the jar file :
 
 mvn clean scala:compile package
 
-Note : please leave the sources in /src and /test since the main developper uses command line & vi to edit them, not an IDE.
+Note : please leave the sources in /src and /test since the main developer uses command line & vi to edit them, not an IDE.
 
 Rapture I/O can be compiled the "low-tech" way using a few familiar commands, or
 you can use the "high-tech" rapture-build Makefile, which can simplify the

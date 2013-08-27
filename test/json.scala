@@ -17,23 +17,25 @@ Unless required by applicable law or agreed to in writing, software distributed 
 distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 implied. See the License for the specific language governing permissions and limitations under the
 License.
-***************************************************************************************************/
-package rapture
+  ***************************************************************************************************/
 
+package rapture
+import collection.mutable.Stack
+import org.scalatest._
+import org.scalatest.matchers.ShouldMatchers
 import rapture._
 
-trait Hex extends ExceptionHandling {
+class JsonSpec extends FlatSpec with ShouldMatchers {
 
-  object Hex {
-    def encode(a: Array[Byte]): String =
-      new String(a flatMap { n => Array((n & 255) >> 4 & 15, n & 15) } map { _ + 48 } map { i =>
-        (if(i > 57) i + 39 else i).toChar })
-
-    def decode(s: String)(implicit eh: ExceptionHandler): eh.![Exception, Array[Byte]] = eh.except {
-      (if(s.length%2 == 0) s else "0"+s).to[Array].grouped(2).to[Array] map { case Array(l, r) =>
-        (((l - 48)%39 << 4) + (r - 48)%39).toByte
-      }
-    }
+  "Json" should "parse a json an int" in {
+    var json = Json.parse("{'name': 2}")
+    json.name.toInt should equal (2)
+    json = Json.parse("{'name': 'aaa'}")
+    json.name.toString should equal ("aaa")
   }
 
+  /*it should "throw NoSuchElementException if an empty stack is popped" in {
+    val emptyStack = new Stack[String]
+    evaluating { emptyStack.pop() } should produce [NoSuchElementException]
+  } */
 }

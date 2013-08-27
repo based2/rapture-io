@@ -20,10 +20,10 @@ License.
 ***************************************************************************************************/
 
 package rapture.implementation
+
 import rapture._
 
-import java.io._
-import java.net._
+import scala.xml._;
 
 /** Defines some extractors for retrieving data from character streams */
 trait Extracting extends Slurping {
@@ -33,14 +33,14 @@ trait Extracting extends Slurping {
     * implementation may be possible. .*/
   object Xml {
     
-    def unapply(in: Input[Char]): Option[Seq[scala.xml.Node]] = try {
+    def unapply(in: Input[Char]): Option[Seq[Node]] = try {
       val so = new StringOutput
       in > so
       unapply(so.buffer)
     } catch { case e: Exception => None }
 
-    def unapply(in: String): Option[Seq[scala.xml.Node]] =
-      try { Some(scala.xml.XML.loadString(in)) } catch { case e: Exception => None }
+    def unapply(in: String): Option[Seq[Node]] =
+      try { Some(XML.loadString(in)) } catch { case e: Exception => None }
   }
 }
 

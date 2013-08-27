@@ -171,7 +171,7 @@ trait JavaWrapping extends LowPriorityJavaWrapping { this: Streaming =>
 
   /** Wraps a `java.io.BufferedWriter` for providing line-by-line output of `String`s
     *
-    * @param out The `java.io.Writer` to be wrapped */
+    * @ param out The `java.io.Writer` to be wrapped */
   class LineOutput(writer: Writer) extends Output[String] {
     def this(os: OutputStream, encoding: Encoding) =
       this(new OutputStreamWriter(os, encoding.name))
@@ -247,7 +247,7 @@ trait JavaWrapping extends LowPriorityJavaWrapping { this: Streaming =>
   }
 
   /** Type class definition for creating an Output[Char] from a Java OutputStream, taking an
-    * [[Encoding]] implicitly for converting between `Byte`s and `Char`s */
+    * Encoding implicitly for converting between `Byte`s and `Char`s */
   implicit def outputStreamCharBuilder(implicit encoding: Encoding) =
     new OutputBuilder[OutputStream, Char] {
       def output(s: OutputStream)(implicit eh: ExceptionHandler): eh.![Exception, Output[Char]] =
@@ -255,7 +255,7 @@ trait JavaWrapping extends LowPriorityJavaWrapping { this: Streaming =>
     }
 
   /** Type class definition for creating an Input[Char] from a Java InputStream, taking an
-    * [[Encoding]] implicitly for converting between `Byte`s and `Char`s */
+    * Encoding implicitly for converting between `Byte`s and `Char`s */
   implicit def inputStreamCharBuilder(implicit encoding: Encoding):
       InputBuilder[InputStream, Char] =
     new InputBuilder[InputStream, Char] {

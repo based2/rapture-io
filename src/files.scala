@@ -19,11 +19,11 @@ implied. See the License for the specific language governing permissions and lim
 License.
 ***************************************************************************************************/
 
-package rapture.implementation
-import rapture._
+package rapture
 
 import java.io._
-import java.net._
+
+import rapture.implementation._
 
 /** Provides support for accessing the file system through FileUrls. This is a wrapper for Java's
   * file handling facilities, and provides roughly the same functionality within the general URL
