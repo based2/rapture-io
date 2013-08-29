@@ -19,23 +19,90 @@ implied. See the License for the specific language governing permissions and lim
 License.
   ***************************************************************************************************/
 
-package rapture
-import collection.mutable.Stack
+package test.rapture
+
 import org.scalatest._
-import org.scalatest.matchers.ShouldMatchers
-import rapture._
+import org.scalatest.matchers.MustMatchers
 
-class JsonSpec extends FlatSpec with ShouldMatchers {
+import rapture.io._
 
-  "Json" should "parse a json an int" in {
-    var json = Json.parse("{'name': 2}")
-    json.name.toInt should equal (2)
-    json = Json.parse("{'name': 'aaa'}")
-    json.name.toString should equal ("aaa")
+import strategy.throwExceptions
+import java.awt.Graphics2D
+
+//import strategy.captureExceptions
+
+class JsonSpec extends FlatSpec with MustMatchers {
+
+  "Json" must "parse a json strings" in {
+    val src = """{
+        "candidates": [
+        {
+          "name": "Mitt Romney",
+          "age": 65,
+          "party": "Republican"
+        },
+        {
+          "name": "Barack Obama",
+          "age": 51,
+          "party": "Democrat"
+        }
+        ]
+      }"""
+   var json = Json.parse(src)
+
+    val n: Int = json.candidates.length-1
+    for (i <- 0 to n) {
+      println(json.candidates(i).name + ":" + json.candidates(i).age.toString + ":" + json.candidates(i).party)
+    }
+
+    def printType(z:Any) = {println(z.asInstanceOf[AnyRef].getClass.getCanonicalName)}
+
+    def printJson(c:Any) = c match {
+        case j: Json => println( j.name + ":" + j.age.toString + ":" + j.party)
+        case s: String => println(s)
+        //case a:Tuple2[Any, Any] =>
+        case a:(Any, ::[Any]) =>
+          printType(a._1)
+          printType(a._2)
+          println(a._1)
+         // a._2.toMap.iterator.foreach((k,v) => println(k+":"+v))
+          a._2 match {
+            case b: ::[Any] => // warning at compilation
+            //case b: $colon$colon[Any] =>
+             /*      b.iterator.foreach{
+                     str => str match {
+                       case s: String => println(s)
+                       case scala.collection.immutable.Map.Map3
+                       case z:Any => printType(z)
+                     }
+                   }  */
+            case z:Any => printType(z)
+          }    */
+        case z:Any => printType(z)
+    }
+    json.candidates.iterator.foreach((c) => printJson(c))
+
+    val party = json.candidates(1).party.getString
+    party must equal ("Democrat")
+
+    //  val age = json.candidates(0).age.toDouble
+    //  age must equal (65.0)
+
+
+      json = Json.parse("""{"name": "2"}""")
+      json.name.toInt must equal (2) // 2.0
+
+      json = Json.parse("""{"abc": "aaa"}""")
+      json.abc.toString must not equal ("aba") // must fail  */
+
+      //json = Json.parse("{'abc': 'aaa'") must produce [NoSuchElementException]
+
+    var str = """ { "foo": "bar" } """
+    //Json.parse(json).foo.get[Option[String]]
+
   }
 
-  /*it should "throw NoSuchElementException if an empty stack is popped" in {
-    val emptyStack = new Stack[String]
-    evaluating { emptyStack.pop() } should produce [NoSuchElementException]
-  } */
+  "Encodings" must "be UTF-8" in {
+    implicit val enc = Encodings.`UTF-8`
+  }
 }

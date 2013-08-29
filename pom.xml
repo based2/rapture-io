@@ -1,59 +1,59 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.propensive</groupId>
-	<artifactId>rapture-io</artifactId>
-	<packaging>jar</packaging>
-	<description>rapture-io</description>
-	<version>0.8_2.10.2</version>
-	<name>rapture-io</name>
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.propensive</groupId>
+    <artifactId>rapture-io</artifactId>
+    <packaging>jar</packaging>
+    <description>rapture-io</description>
+    <version>0.8_2.10.2</version>
+    <name>rapture-io</name>
 
-	<organization>
-		<name>com.propensive</name>
-	</organization>
+    <organization>
+        <name>com.propensive</name>
+    </organization>
 
-	<properties>
+    <properties>
         <java.version>1.7</java.version>
-		<scala.version>2.10.2</scala.version>
+        <scala.version>2.10.2</scala.version>
         <rapture-io.version>0.8_${scala.version}</rapture-io.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
-		<dependency>
-			<groupId>org.scala-lang</groupId>
-			<artifactId>scala-library</artifactId>
-			<version>${scala.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.4.7</version>
-			<scope>compile</scope>
-		</dependency>
-		<!--
-		    http://www.scalatest.org/user_guide/using_the_scalatest_maven_plugin
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--
+            http://www.scalatest.org/user_guide/using_the_scalatest_maven_plugin
         -->
-		<dependency>
-			<groupId>org.scalatest</groupId>
-			<artifactId>scalatest_2.10</artifactId>
-			<version>1.9.1</version>
-			<scope>test</scope>
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_2.10</artifactId>
+            <version>1.9.1</version>
+            <scope>test</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.scala-lang</groupId>
                     <artifactId>scala-library</artifactId>
                 </exclusion>
             </exclusions>
-		</dependency>
-	</dependencies>
-	<build>
+        </dependency>
+    </dependencies>
+    <build>
         <sourceDirectory>src</sourceDirectory>
         <testSourceDirectory>test</testSourceDirectory>
-		<plugins>
+        <plugins>
             <!-- http://davidb.github.io/scala-maven-plugin/
                  fork of http://scala-tools.org/mvnsites/maven-scala-plugin/
 
@@ -69,23 +69,23 @@
                         <goals>
                             <goal>add-source</goal>
                             <goal>compile</goal>
-                          <!--  <goal>testCompile</goal>  -->
+                            <!--  <goal>testCompile</goal>  -->
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                  <!--  <jvmArgs>
-                        <jvmArg>-Xms64m</jvmArg>
-                        <jvmArg>-Xmx1024m</jvmArg>
-                    </jvmArgs> -->
-                  <!--  <args>
-                        <arg>-unchecked</arg>
-                        <arg>-deprecation</arg>
-                        <arg>-explaintypes</arg>
-                    </args> -->
+                    <!--  <jvmArgs>
+                          <jvmArg>-Xms64m</jvmArg>
+                          <jvmArg>-Xmx1024m</jvmArg>
+                      </jvmArgs> -->
+                    <!--  <args>
+                          <arg>-unchecked</arg>
+                          <arg>-deprecation</arg>
+                          <arg>-explaintypes</arg>
+                      </args> -->
                     <scalaVersion>${scala.version}</scalaVersion>
                     <recompileMode>incremental</recompileMode>
-                   <!-- <useZincServer>true</useZincServer> -->
+                    <!-- <useZincServer>true</useZincServer> -->
                     <sourceDir>{basedir}/src</sourceDir>
                 </configuration>
             </plugin>
@@ -97,25 +97,6 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
-           <!-- <plugin>
-                <groupId>com.jolira</groupId>
-                <artifactId>onejar-maven-plugin</artifactId>
-                <version>1.4.4</version>  -->
-                <!-- http://code.google.com/p/onejar-maven-plugin/  - GPLv3 - Use code of one-jar.sourceforge.net
-                     http://onejar-maven-plugin.googlecode.com/svn/mavensite/license.html - GPLv3
-                  Alt: http://one-jar.sourceforge.net/index.php?page=documents&file=license - BSd
-                 -->
-           <!--     <executions>
-                    <execution>
-                        <configuration>
-                            <filename>rapture-io-${rapture-io.version}.jar</filename>
-                        </configuration>
-                        <goals>
-                            <goal>one-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin> -->
             <!-- http://www.mkyong.com/maven/how-to-create-a-jar-file-with-maven/ -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -126,58 +107,60 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <!-- <mainClass></mainClass> -->
-                           <!-- <classpathPrefix>lib/</classpathPrefix> -->
+                            <!-- <classpathPrefix>lib/</classpathPrefix> -->
                         </manifest>
                     </archive>
                 </configuration>
             </plugin>
-          <!--  <plugin>
+            <!--  <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-dependency-plugin</artifactId>
+                  <version>2.8</version>
+                  <executions>
+                      <execution>
+                          <id>copy-dependencies</id>
+                          <phase>package</phase>
+                          <goals>
+                              <goal>copy-dependencies</goal>
+                          </goals>
+                          <configuration>
+                              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                              <includeScope>provided</includeScope>
+                          </configuration>
+                      </execution>
+                  </executions>
+              </plugin>  -->
+            <!-- <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-gpg-plugin</artifactId>
+                 <version>1.4</version>
+                 <executions>
+                     <execution>
+                         <id>sign-artifacts</id>
+                         <phase>verify</phase>
+                         <goals>
+                             <goal>sign</goal>
+                         </goals>
+                     </execution>
+                 </executions>
+             </plugin>  -->
+            <!-- disable surefire -->
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.8</version>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <includeScope>provided</includeScope>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>  -->
-           <!-- <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.4</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>  -->
-        <!-- disable surefire -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.15</version>
-        <configuration>
-            <forkMode>once</forkMode>
-            <skipTests>true</skipTests>
-        </configuration>
-        </plugin>
-        <!-- enable scalatest -->
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.15</version>
+                <configuration>
+                    <forkMode>once</forkMode>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <!-- enable scalatest -->
+            <!-- 1.0-M4-SNAPSHOT -->
+            <!--
         <plugin>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest-maven-plugin</artifactId>
-            <version>1.0-M4-SNAP1</version> <!-- 1.0-M4-SNAPSHOT -->
+            <version>1.0-M4-SNAP1</version>
             <configuration>
                 <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
                 <junitxml>.</junitxml>
@@ -191,31 +174,31 @@
                 </goals>
                 </execution>
             </executions>
-        </plugin>
-    <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-install-plugin</artifactId>
-        <version>2.4</version>
-        <executions>
-            <execution>
-                <id>com.propensive:rapture-io:0.8:${project.basedir}/target/rapture-io-${rapture-io.version}.jar</id>
-                <phase>install</phase>
-                <goals>
-                    <goal>install-file</goal>
-                </goals>
-                <configuration>
-                    <groupId>com.propensive</groupId>
-                    <artifactId>rapture-io</artifactId>
-                    <version>${rapture-io.version}</version>
-                    <packaging>jar</packaging>
-                    <file>${project.basedir}/target/rapture-io-${rapture-io.version}.jar</file>
-                    <generatePom>true</generatePom>
-                </configuration>
-            </execution>
-        </executions>
-    </plugin>
-</plugins>
-</build>
+        </plugin>      -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>com.propensive:rapture-io:0.8:${project.basedir}/target/rapture-io-${rapture-io.version}.jar</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.propensive</groupId>
+                            <artifactId>rapture-io</artifactId>
+                            <version>${rapture-io.version}</version>
+                            <packaging>jar</packaging>
+                            <file>${project.basedir}/target/rapture-io-${rapture-io.version}.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <repositories>
         <repository>
@@ -227,54 +210,54 @@
     </repositories>
 
 
-<!-- To register for your project dependency, if rapture-io-0.8_2.10.2.jar is installed by download.
-phase: initialize (http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#Lifecycle_Reference)
-
-<properties>
-    <rapture-io.version>0.8_2.10.2</rapture-io.version>
-</properties>
-
-<dependency>
-  <groupId>com.propensive</groupId>
-  <artifactId>rapture-io</artifactId>
-  <version>${rapture-io.version}</version>
-</dependency>
-
--->
+    <!-- To register for your project dependency, if rapture-io-0.8_2.10.2.jar is installed by download.
+    phase: initialize (http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#Lifecycle_Reference)
+    
+    <properties>
+        <rapture-io.version>0.8_2.10.2</rapture-io.version>
+    </properties>
+    
+    <dependency>
+      <groupId>com.propensive</groupId>
+      <artifactId>rapture-io</artifactId>
+      <version>${rapture-io.version}</version>
+    </dependency>
+    
+    -->
     <profiles>
-    <profile>
-        <id>install-rapture-io-lib</id>
-        <build>
-            <plugins>
-                <!--
-                     mvn install:install-file -DgroupId=com.propensive -DartifactId=rapture-io \
-                            -Dversion=0.8_2.10.2 -Dpackaging=jar -Dfile=rapture-io-0.8_2.10.2.jar -DgeneratePom=true
-                -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>2.4</version>
-                    <executions>
-                        <execution>
-                            <id>com.propensive:rapture-io:${rapture-io.version}:${project.basedir}/target/rapture-io-${rapture-io.version}.jar</id>
-                            <phase>initialize</phase>
-                            <goals>
-                                <goal>install-file</goal>
-                            </goals>
-                            <configuration>
-                                <groupId>com.propensive</groupId>
-                                <artifactId>rapture-io</artifactId>
-                                <version>${rapture-io.version}</version>
-                                <packaging>jar</packaging>
-                                <file>${project.basedir}/target/rapture-io-${rapture-io.version}.jar</file>
-                                <generatePom>true</generatePom>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </build>
-    </profile>
+        <profile>
+            <id>install-rapture-io-lib</id>
+            <build>
+                <plugins>
+                    <!--
+                         mvn install:install-file -DgroupId=com.propensive -DartifactId=rapture-io \
+                                -Dversion=0.8_2.10.2 -Dpackaging=jar -Dfile=rapture-io-0.8_2.10.2.jar -DgeneratePom=true
+                    -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-install-plugin</artifactId>
+                        <version>2.4</version>
+                        <executions>
+                            <execution>
+                                <id>com.propensive:rapture-io:${rapture-io.version}:${project.basedir}/target/rapture-io-${rapture-io.version}.jar</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>install-file</goal>
+                                </goals>
+                                <configuration>
+                                    <groupId>com.propensive</groupId>
+                                    <artifactId>rapture-io</artifactId>
+                                    <version>${rapture-io.version}</version>
+                                    <packaging>jar</packaging>
+                                    <file>${project.basedir}/target/rapture-io-${rapture-io.version}.jar</file>
+                                    <generatePom>true</generatePom>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 </project>

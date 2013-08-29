@@ -47,12 +47,12 @@ trait JsonProcessing extends ExceptionHandling with Linking with Misc {
       }
     } (parse(s).get)) catch { case e: Exception => None }
   }
-  
+
   /** The default JSON parser implementation */
   implicit val ScalaJsonParser = new JsonParser {
-    
+
     import scala.util.parsing.json._
-    
+
     def parse(s: String): Option[Any] = JSON.parseFull(s)
   }
 
@@ -136,7 +136,7 @@ trait JsonProcessing extends ExceptionHandling with Linking with Misc {
     def unapply(json: Any): Option[Json] = Some(new Json(json))
 
     def format(json: Json): String = format(Some(json.json), 0)
-    
+
     /** Formats the JSON object for multi-line readability. */
     def format(json: Option[Any], ln: Int): String = {
       val indent = " "*ln
@@ -182,13 +182,13 @@ trait JsonProcessing extends ExceptionHandling with Linking with Misc {
         case _ => "undefined"
       }
     }
-    
+
   }
 
   /** Companion object for Extractor type. Defines very simple extractor methods for different
     * types which may be contained within. */
   object Extractor {
-    
+
     implicit val noopExtractor = new Extractor[Json](x => new Json(x))
     implicit val noopExtractor2 = new Extractor[JsonBuffer](x => new JsonBuffer(x))
     implicit val stringExtractor = new Extractor[String](_.asInstanceOf[String])
@@ -200,18 +200,18 @@ trait JsonProcessing extends ExceptionHandling with Linking with Misc {
     implicit val longExtractor = new Extractor[Long](_.asInstanceOf[Double].toLong)
     implicit val booleanExtractor = new Extractor[Boolean](_.asInstanceOf[Boolean])
     implicit val anyExtractor = new Extractor[Any](identity)
-    
+
     implicit def listExtractor[T: Extractor] =
       new Extractor[List[T]](_.asInstanceOf[Seq[Any]].to[List] map { x =>
         implicitly[Extractor[T]].cast(x)
       })
-    
+
     implicit def optionExtractor[T: Extractor] =
       new Extractor[Option[T]](x => if(x == null) None else Some(x.asInstanceOf[Any]).map(
           implicitly[Extractor[T]].cast)) {
         override def errorToNull = true
       }
-    
+
     implicit def mapExtractor[T: Extractor] =
       new Extractor[Map[String, T]](_.asInstanceOf[scala.collection.Map[String, Any]].
           toMap.mapValues(implicitly[Extractor[T]].cast))
@@ -230,20 +230,20 @@ trait JsonProcessing extends ExceptionHandling with Linking with Misc {
     /** Assumes the Json object is wrapping a List, and extracts the `i`th element from the list */
     def apply(i: Int): Json =
       new Json(json, Left(i) :: path)
-   
+
     /** Combines a `selectDynamic` and an `apply`.  This is necessary due to the way dynamic
       * application is expanded. */
     def applyDynamic(key: String)(i: Int): Json = selectDynamic(key).apply(i)
-    
+
     /** Navigates the JSON using the `SimplePath` parameter, and returns the element at that
       * position in the tree. */
     def extract(sp: SimplePath): Json =
       if(sp == ^) this else selectDynamic(sp.head).extract(sp.tail)
-    
+
     /** Assumes the Json object wraps a `Map`, and extracts the element `key`. */
     def selectDynamic(key: String): Json =
       new Json(json, Right(key) :: path)
-   
+
     private[JsonProcessing] def normalize: Any = {
       yCombinator[(Any, List[Either[Int, String]]), Any] { fn => v => v match {
         case (j, Nil) => j
@@ -257,20 +257,78 @@ trait JsonProcessing extends ExceptionHandling with Linking with Misc {
             case e: ClassCastException => throw MissingValueException()
             case e: NoSuchElementException => throw MissingValueException()
           }, t)
-          
+
       } } (json -> path.reverse)
     }
 
+    /** @deprecated use 'to' */
+    def get[T](implicit extractor: Extractor[T], eh: ExceptionHandler): eh.![JsonGetException, T] = to
+
     /** Assumes the Json object is wrapping a `T`, and casts (intelligently) to that type. */
-    def get[T](implicit extractor: Extractor[T], eh: ExceptionHandler):
+    def to[T](implicit extractor: Extractor[T], eh: ExceptionHandler):
         eh.![JsonGetException, T] = eh.except(try extractor.cast(if(extractor.errorToNull)
             (try normalize catch { case e: Exception => null }) else normalize) catch {
           case e: MissingValueException => throw e
           case e: Exception => throw new TypeMismatchException()
         })
 
+    /** Assumes the Json object is wrapping a List, and returns the length */
+  /*  def length: Int = json match {
+      case m1:scala.collection.immutable.Map[String,::[Any]] => m1.iterator.size
+      case j:List[Json] => j.length
+      case m2:scala.collection.immutable.Map2[String,::[Any]] => m2.iterator.size
+      case m3:scala.collection.immutable.Map3[String,::[Any]] => m3.iterator.size
+      case _ => _.iterator.size
+    }*/
+
     /** Assumes the Json object is wrapping a List, and returns an iterator over the list */
-    def iterator: Iterator[Json] = json.asInstanceOf[List[Json]].iterator
+   /* def iterator: Iterator[Any] = json match {
+      case m3:scala.collection.immutable.Map.Map3[String,::[Any]] => m3.iterator
+      case j:List[Json] => j.iterator
+      case m1:scala.collection.immutable.Map.Map1[String,::[Any]] => m1.iterator
+      case m2:scala.collection.immutable.Map.Map2[String,::[Any]] => m2.iterator
+      case _ => _.iterator
+    } */
+
+    /** Assumes the Json object is wrapping a List, and returns the length */
+   def length: Int = {
+      try {
+        json.asInstanceOf[List[Json]].length
+      } catch {
+        case ex:java.lang.ClassCastException =>
+        try {
+          json.asInstanceOf[scala.collection.immutable.Map.Map1[String,Json]].iterator.size
+        } catch {
+          case ex:java.lang.ClassCastException =>
+          try {
+            json.asInstanceOf[scala.collection.immutable.Map.Map2[String,Json]].iterator.size
+          } catch {
+            case ex:java.lang.ClassCastException =>
+              json.asInstanceOf[scala.collection.immutable.Map.Map3[String,Json]].iterator.size
+          }
+        }
+      }
+    }
+
+    /** Assumes the Json object is wrapping a List, and returns an iterator over the list */
+     def iterator: Iterator[Any] = {
+      try {
+         json.asInstanceOf[List[Json]].iterator
+      } catch {
+        case ex:java.lang.ClassCastException =>
+          try {
+            json.asInstanceOf[scala.collection.immutable.Map.Map1[String,Json]].iterator
+          } catch {
+            case ex:java.lang.ClassCastException =>
+              try {
+                json.asInstanceOf[scala.collection.immutable.Map.Map2[String,Json]].iterator
+              } catch {
+                case ex:java.lang.ClassCastException =>
+                  json.asInstanceOf[scala.collection.immutable.Map.Map3[String,Json]].iterator
+              }
+          }
+      }
+    }
 
     override def toString =
       try Json.format(Some(normalize), 0) catch {
@@ -283,7 +341,7 @@ trait JsonProcessing extends ExceptionHandling with Linking with Misc {
     /** Updates the element `key` of the JSON object with the value `v` */
     def updateDynamic(key: String)(v: Any): Unit =
       normalize(false, true).asInstanceOf[HashMap[String, Any]](key) = v
-   
+
     /** Updates the `i`th element of the JSON array with the value `v` */
     def update(i: Int, v: Any): Unit = normalize(true, true).asInstanceOf[ListBuffer[Any]](i) = v
 
@@ -297,20 +355,20 @@ trait JsonProcessing extends ExceptionHandling with Linking with Misc {
       * list */
     def apply(i: Int): JsonBuffer =
       new JsonBuffer(json, Left(i) :: path)
-   
+
     /** Combines a `selectDynamic` and an `apply`.  This is necessary due to the way dynamic
       * application is expanded. */
     def applyDynamic(key: String)(i: Int): JsonBuffer = selectDynamic(key).apply(i)
-    
+
     /** Navigates the JSON using the `SimplePath` parameter, and returns the element at that
       * position in the tree. */
     def extract(sp: SimplePath): JsonBuffer =
       if(sp == ^) this else selectDynamic(sp.head).extract(sp.tail)
-    
+
     /** Assumes the Json object wraps a `Map`, and extracts the element `key`. */
     def selectDynamic(key: String): JsonBuffer =
       new JsonBuffer(json, Right(key) :: path)
-   
+
     private[JsonProcessing] def normalize(array: Boolean, modify: Boolean): Any = {
       yCombinator[(Any, List[Either[Int, String]]), Any] { fn => v => v match {
         case (j, Nil) => j
@@ -328,7 +386,7 @@ trait JsonProcessing extends ExceptionHandling with Linking with Misc {
             case e: ClassCastException => throw MissingValueException()
             case e: NoSuchElementException => throw MissingValueException()
           }, t)
-          
+
       } } (json -> path.reverse)
     }
 
